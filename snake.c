@@ -53,6 +53,7 @@ typedef struct p
 
 Position body[MAX_BODY_LENGTH];
 int lastInput;
+int pauseInput;
 int head;
 int tail;
 int bodyLength;
@@ -206,11 +207,13 @@ void move(){
     tail = tail + 1 == MAX_BODY_LENGTH ? 0 : tail + 1;
     Position prevHead = body[head];
     head = head + 1 == MAX_BODY_LENGTH ? 0 : head + 1;
-    body[head] = { prevHead.x + (direction == DIRECTION_LEFT ? -1 : (direction == DIRECTION_RIGHT ? 1 : 0)), prevHead.y + (direction == DIRECTION_UP ? -1 : (direction == DIRECTION_DOWN ? 1 : 0)) };
+    body[head] = { 
+        prevHead.x + (direction == DIRECTION_LEFT ? -1 : (direction == DIRECTION_RIGHT ? 1 : 0)), 
+        prevHead.y + (direction == DIRECTION_UP ? -1 : (direction == DIRECTION_DOWN ? 1 : 0)) 
+    };
     body[head].x = body[head].x < 0 ? GAME_AREA_WIDTH - 1 : (body[head].x >= GAME_AREA_WIDTH ? 0 : body[head].x);
     body[head].y = body[head].y < 0 ? GAME_AREA_HEIGHT - 1 : (body[head].y >= GAME_AREA_HEIGHT ? 0 : body[head].y);
 }
-
 
 /**
  * Displays the score on the data matrix. The numbers range from 0 to 10. By default we display 11 to the user
@@ -401,7 +404,6 @@ void eat()
         if (timeDifficult > 100){
             timeDifficult -= 75;
         }
-    
         // Play randomly a sound
         tone(0, melodyEat[score], 1000/8);
 
@@ -450,7 +452,6 @@ void musicWin(){
         // to calculate the note duration, take one second divided by the note type.
         int noteDuration = 1000 / noteDurations[thisNote];
         tone(0, melody[thisNote], noteDuration);
-
         // to distinguish the notes, set a minimum time between them.
         // the note's duration + 30% seems to work well:
         int pauseBetweenNotes = noteDuration * 1.30;
@@ -462,7 +463,7 @@ void musicWin(){
 }
 
 /**
- * Define the pinMode : Matrix and buton.
+ * Define the pinMode : Matrix and buttons.
  * Initialise the variable with the function reset
  */
 void setup(){   
@@ -485,7 +486,7 @@ void setup(){
 
     pinMode(PIN_INPUT_LEFT, INPUT);
     pinMode(PIN_INPUT_RIGHT, INPUT);
-    pinMode(PIN_INPUT_PLAY_PAUSE, INPUT);
+    pinMode(PIN_INPUT_PLAY_PAUSE, INPUT_PULLUP);
 
     reset(); 
 }
@@ -500,13 +501,11 @@ void loop(){
     if(!gameover){
         draw();
         elapsedTime += currentTime - previousTime;
-        if(digitalRead(PIN_INPUT_PLAY_PAUSE)) {
-            isPaused = !isPaused
-            Serial.print("isPaused");
-            Serial.println(isPaused);
+        if(!digitalRead(PIN_INPUT_PLAY_PAUSE) && pauseInput) {
+            isPaused = !isPaused;
         }
-        if (!isPaused)
-        {
+        pauseInput = digitalRead(PIN_INPUT_PLAY_PAUSE);
+        if (!isPaused){
             if(elapsedTime > timeDifficult){
                 move();
                 eat();
@@ -550,7 +549,7 @@ void restart(){
     bool restartButton = true;
     while (restartButton){
         printScore(999);
-        if(digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT)){
+        if(digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT) || digitalRead(PIN_INPUT_PLAY_PAUSE)){
             restartButton = false;
         }
     }
