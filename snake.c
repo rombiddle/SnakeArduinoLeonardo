@@ -11,7 +11,6 @@
  */
 #include "pitches.h"
 
-
 /* These constants is called for LED matrix 8x8 on the pixel at row */
 #define PIN_ROW1 2
 #define PIN_ROW2 3
@@ -135,7 +134,7 @@ void setPixel(int row, int column)
 
 /**
  * Check if the food position is valid.
- * 
+ * \returns    The boolean result of the algorithm 
  */
 bool foodPositionIsValid()
 {
@@ -528,7 +527,10 @@ void setup(){
   reset(); 
 }
 
-
+/**
+ * This function is used when a block of code needs to be executed several number of times.
+ * 
+ */
 void loop(){   
      unsigned long currentTime = millis(); 
 
@@ -554,8 +556,6 @@ void loop(){
      }
      else
      {
-      
-
         if (!musicWinPlayed)
           {
             musicWin();
