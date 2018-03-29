@@ -46,8 +46,8 @@
 
 typedef struct p
 {
-  int x;
-  int y;
+    int x;
+    int y;
 } Position;
 
 Position body[MAX_BODY_LENGTH];
@@ -65,20 +65,10 @@ unsigned long previousTime;
 bool musicWinPlayed;
 int timeDifficult;
 
-int melody[] = {
-  NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4
-};
-
-int melodyEat[] = {
-  NOTE_C4, NOTE_G3, NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3
-};
-
-int noteDurations[] = {
-  4, 8, 8, 4, 4, 4, 4, 4
-};
-
+int melody[] = { NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4 };
+int melodyEat[] = { NOTE_C4, NOTE_G3, NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3 };
+int noteDurations[] = { 4, 8, 8, 4, 4, 4, 4, 4 };
 int eatingTone = NOTE_C4;
-
 
 /**
  * Turn the LED matrix 8x8 on the pixel at row and column. This function is called several times.
@@ -86,73 +76,67 @@ int eatingTone = NOTE_C4;
  * @param row Position to be lit on the row 
  * @param column Position to be lit on the column
  */
-void setPixel(int row, int column)
-{
-  digitalWrite(PIN_ROW1, LOW);
-  digitalWrite(PIN_ROW2, LOW);
-  digitalWrite(PIN_ROW3, LOW);
-  digitalWrite(PIN_ROW4, LOW);
-  digitalWrite(PIN_ROW5, LOW);
-  digitalWrite(PIN_ROW6, LOW);
-  digitalWrite(PIN_ROW7, LOW);
-  digitalWrite(PIN_ROW8, LOW);
-  digitalWrite(PIN_COL1, HIGH);
-  digitalWrite(PIN_COL2, HIGH);
-  digitalWrite(PIN_COL3, HIGH);
-  digitalWrite(PIN_COL4, HIGH);
-  digitalWrite(PIN_COL5, HIGH);
-  digitalWrite(PIN_COL6, HIGH);
-  digitalWrite(PIN_COL7, HIGH);
-  digitalWrite(PIN_COL8, HIGH);
-  
-  switch(column)
-  {
-    case 0: digitalWrite(PIN_COL1, LOW); break;
-    case 1: digitalWrite(PIN_COL2, LOW); break;
-    case 2: digitalWrite(PIN_COL3, LOW); break;
-    case 3: digitalWrite(PIN_COL4, LOW); break;
-    case 4: digitalWrite(PIN_COL5, LOW); break;
-    case 5: digitalWrite(PIN_COL6, LOW); break;
-    case 6: digitalWrite(PIN_COL7, LOW); break;
-    case 7: digitalWrite(PIN_COL8, LOW); break;
-    default: break;
-  }
+void setPixel(int row, int column){
+    digitalWrite(PIN_ROW1, LOW);
+    digitalWrite(PIN_ROW2, LOW);
+    digitalWrite(PIN_ROW3, LOW);
+    digitalWrite(PIN_ROW4, LOW);
+    digitalWrite(PIN_ROW5, LOW);
+    digitalWrite(PIN_ROW6, LOW);
+    digitalWrite(PIN_ROW7, LOW);
+    digitalWrite(PIN_ROW8, LOW);
+    digitalWrite(PIN_COL1, HIGH);
+    digitalWrite(PIN_COL2, HIGH);
+    digitalWrite(PIN_COL3, HIGH);
+    digitalWrite(PIN_COL4, HIGH);
+    digitalWrite(PIN_COL5, HIGH);
+    digitalWrite(PIN_COL6, HIGH);
+    digitalWrite(PIN_COL7, HIGH);
+    digitalWrite(PIN_COL8, HIGH);
+        
+    switch(column){
+        case 0: digitalWrite(PIN_COL1, LOW); break;
+        case 1: digitalWrite(PIN_COL2, LOW); break;
+        case 2: digitalWrite(PIN_COL3, LOW); break;
+        case 3: digitalWrite(PIN_COL4, LOW); break;
+        case 4: digitalWrite(PIN_COL5, LOW); break;
+        case 5: digitalWrite(PIN_COL6, LOW); break;
+        case 6: digitalWrite(PIN_COL7, LOW); break;
+        case 7: digitalWrite(PIN_COL8, LOW); break;
+        default: break;
+    }
 
-  switch(row)
-  {
-    case 0: digitalWrite(PIN_ROW1, HIGH); break;
-    case 1: digitalWrite(PIN_ROW2, HIGH); break;
-    case 2: digitalWrite(PIN_ROW3, HIGH); break;
-    case 3: digitalWrite(PIN_ROW4, HIGH); break;
-    case 4: digitalWrite(PIN_ROW5, HIGH); break;
-    case 5: digitalWrite(PIN_ROW6, HIGH); break;
-    case 6: digitalWrite(PIN_ROW7, HIGH); break;
-    case 7: digitalWrite(PIN_ROW8, HIGH); break;
-    default: break;
+    switch(row){
+        case 0: digitalWrite(PIN_ROW1, HIGH); break;
+        case 1: digitalWrite(PIN_ROW2, HIGH); break;
+        case 2: digitalWrite(PIN_ROW3, HIGH); break;
+        case 3: digitalWrite(PIN_ROW4, HIGH); break;
+        case 4: digitalWrite(PIN_ROW5, HIGH); break;
+        case 5: digitalWrite(PIN_ROW6, HIGH); break;
+        case 6: digitalWrite(PIN_ROW7, HIGH); break;
+        case 7: digitalWrite(PIN_ROW8, HIGH); break;
+        default: break;
     }
 }
 
 /**
  * Check if the food position is valid.
- * \returns    The boolean result of the algorithm 
+ * \returns     The boolean result of the algorithm 
  */
 bool foodPositionIsValid()
 {
-  if (food.x < 0 || food.y < 0) return false;
+    if (food.x < 0 || food.y < 0) return false;
 
-  for (int i = tail; i <= (head > tail ? head : MAX_BODY_LENGTH - 1); i++)
-  {
-    if (body[i].x == food.x && body[i].y == food.y) return false;
-  }
-
-  if (head < tail)
-  {
-    for (int i = 0; i <= head; i++)
-    {
-      if (body[i].x == food.x && body[i].y == food.y) return false;
+    for (int i = tail; i <= (head > tail ? head : MAX_BODY_LENGTH - 1); i++){
+        if (body[i].x == food.x && body[i].y == food.y) return false;
     }
-  }
-  return true;
+
+    if (head < tail){
+        for (int i = 0; i <= head; i++){
+            if (body[i].x == food.x && body[i].y == food.y) return false;
+        }
+    }
+    return true;
 }
 
 
@@ -160,28 +144,22 @@ bool foodPositionIsValid()
  * Check if the game is lost. This function is called several times on the loop.
  * 
  */
-void checkGameover()
-{
-  for (int i = tail; i <= (head > tail ? head - 1 : MAX_BODY_LENGTH - 1); i++)
-  {
-    if (body[head].x == body[i].x && body[head].y == body[i].y)
-    {
-      gameover = GAME_OVER_TIME;
-        return;
+void checkGameover(){
+    for (int i = tail; i <= (head > tail ? head - 1 : MAX_BODY_LENGTH - 1); i++){
+        if (body[head].x == body[i].x && body[head].y == body[i].y){
+            gameover = GAME_OVER_TIME;
+            return;
+        }
     }
-  }
 
-  if (head < tail)
-  {
-    for (int i = 0; i < head; i++)
-    {
-      if (body[head].x == body[i].x && body[head].y == body[i].y)
-      {
-        gameover = GAME_OVER_TIME;
-        return;
-      }
+    if (head < tail){
+        for (int i = 0; i < head; i++){
+            if (body[head].x == body[i].x && body[head].y == body[i].y){
+                gameover = GAME_OVER_TIME;
+                return;
+            }
+        }
     }
-  }
 }
 
 
@@ -191,11 +169,11 @@ void checkGameover()
  */
 void spawnFood()
 {
-  while (!foodPositionIsValid()){
-    food = { random(GAME_AREA_WIDTH), random(GAME_AREA_HEIGHT) };
-    Serial.print("food spawn");
-  }
-  Serial.print("food spawn invalid");
+    while (!foodPositionIsValid()){
+        food = { random(GAME_AREA_WIDTH), random(GAME_AREA_HEIGHT) };
+        Serial.print("food spawn");
+    }
+    Serial.print("food spawn invalid");
 }
 
 
@@ -205,20 +183,16 @@ void spawnFood()
  */
 void draw()
 {
-  for (int i = tail; i <= (head > tail ? head : MAX_BODY_LENGTH - 1); i++)
-  {
-    setPixel(body[i].x, body[i].y);
-  }
-
-  if (head < tail)
-  {
-    for (int i = 0; i <= head; i++)
-    {
-      setPixel(body[i].x, body[i].y);
+    for (int i = tail; i <= (head > tail ? head : MAX_BODY_LENGTH - 1); i++){
+        setPixel(body[i].x, body[i].y);
     }
-  }
-  setPixel(food.x, food.y);
 
+    if (head < tail){
+        for (int i = 0; i <= head; i++){
+            setPixel(body[i].x, body[i].y);
+        }
+    }
+    setPixel(food.x, food.y);
 }
 
 
@@ -227,14 +201,13 @@ void draw()
  * We have 4 direction : DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP, DIRECTION_DOWN
  * 
  */
-void move()
-{
-  tail = tail + 1 == MAX_BODY_LENGTH ? 0 : tail + 1;
-  Position prevHead = body[head];
-  head = head + 1 == MAX_BODY_LENGTH ? 0 : head + 1;
-  body[head] = { prevHead.x + (direction == DIRECTION_LEFT ? -1 : (direction == DIRECTION_RIGHT ? 1 : 0)), prevHead.y + (direction == DIRECTION_UP ? -1 : (direction == DIRECTION_DOWN ? 1 : 0)) };
-  body[head].x = body[head].x < 0 ? GAME_AREA_WIDTH - 1 : (body[head].x >= GAME_AREA_WIDTH ? 0 : body[head].x);
-  body[head].y = body[head].y < 0 ? GAME_AREA_HEIGHT - 1 : (body[head].y >= GAME_AREA_HEIGHT ? 0 : body[head].y);
+void move(){
+    tail = tail + 1 == MAX_BODY_LENGTH ? 0 : tail + 1;
+    Position prevHead = body[head];
+    head = head + 1 == MAX_BODY_LENGTH ? 0 : head + 1;
+    body[head] = { prevHead.x + (direction == DIRECTION_LEFT ? -1 : (direction == DIRECTION_RIGHT ? 1 : 0)), prevHead.y + (direction == DIRECTION_UP ? -1 : (direction == DIRECTION_DOWN ? 1 : 0)) };
+    body[head].x = body[head].x < 0 ? GAME_AREA_WIDTH - 1 : (body[head].x >= GAME_AREA_WIDTH ? 0 : body[head].x);
+    body[head].y = body[head].y < 0 ? GAME_AREA_HEIGHT - 1 : (body[head].y >= GAME_AREA_HEIGHT ? 0 : body[head].y);
 }
 
 
@@ -244,181 +217,173 @@ void move()
  * @param score  Result of the number of eating food
  */
 void printScore(int score) {
-
-    switch(score)
-    {
-      case 0:
-  setPixel(5,3);
-  setPixel(3,3);
-  setPixel(2,3);
-  setPixel(1,3);
-  setPixel(5,4);
-  setPixel(4,3);
-  setPixel(5,5);
-  setPixel(4,5);
-  setPixel(3,5);
-  setPixel(2,5);
-  setPixel(1,5);
-  setPixel(1,4);
-      case 1: 
-  setPixel(5,4);
-  setPixel(4,4);
-  setPixel(3,4);
-  setPixel(2,4);
-  setPixel(1,4);
+    switch(score){
+        case 0:
+            setPixel(5,3);
+            setPixel(3,3);
+            setPixel(2,3);
+            setPixel(1,3);
+            setPixel(5,4);
+            setPixel(4,3);
+            setPixel(5,5);
+            setPixel(4,5);
+            setPixel(3,5);
+            setPixel(2,5);
+            setPixel(1,5);
+            setPixel(1,4);
             break;
-      case 2: 
-  setPixel(5,5);
-  setPixel(3,5);
-  setPixel(3,4);
-  setPixel(5,3);
-  setPixel(4,3);
-  setPixel(3,3);
-  setPixel(1,3);
-  setPixel(5,4);
-  setPixel(1,4);
-  setPixel(1,5);
-  setPixel(2,5);
+        case 1: 
+            setPixel(5,4);
+            setPixel(4,4);
+            setPixel(3,4);
+            setPixel(2,4);
+            setPixel(1,4);
             break;
-      case 3: 
-  setPixel(5,5);
-  setPixel(3,5);
-  setPixel(3,4);
-  setPixel(5,3);
-  setPixel(4,3);
-  setPixel(3,3);
-  setPixel(2,3);
-  setPixel(1,3);
-  setPixel(5,4);
-  setPixel(1,4);
-  setPixel(1,5);
+        case 2: 
+            setPixel(5,5);
+            setPixel(3,5);
+            setPixel(3,4);
+            setPixel(5,3);
+            setPixel(4,3);
+            setPixel(3,3);
+            setPixel(1,3);
+            setPixel(5,4);
+            setPixel(1,4);
+            setPixel(1,5);
+            setPixel(2,5);
             break;
-      case 4: 
-  setPixel(5,5);
-  setPixel(4,5);
-  setPixel(3,5);
-  setPixel(3,4);
-  setPixel(5,3);
-  setPixel(4,3);
-  setPixel(3,3);
-  setPixel(2,3);
-  setPixel(1,3);
+        case 3: 
+            setPixel(5,5);
+            setPixel(3,5);
+            setPixel(3,4);
+            setPixel(5,3);
+            setPixel(4,3);
+            setPixel(3,3);
+            setPixel(2,3);
+            setPixel(1,3);
+            setPixel(5,4);
+            setPixel(1,4);
+            setPixel(1,5);
             break;
-      case 5: 
- setPixel(5,3);
-  setPixel(3,3);
-  setPixel(2,3);
-  setPixel(1,3);
-  setPixel(5,4);
-  setPixel(3,4);
-  setPixel(5,5);
-  setPixel(4,5);
-  setPixel(3,5);
-  setPixel(1,5);
-  setPixel(1,4);
-
+        case 4: 
+            setPixel(5,5);
+            setPixel(4,5);
+            setPixel(3,5);
+            setPixel(3,4);
+            setPixel(5,3);
+            setPixel(4,3);
+            setPixel(3,3);
+            setPixel(2,3);
+            setPixel(1,3);
             break;
-      case 6: 
-  setPixel(5,3);
-  setPixel(3,3);
-  setPixel(2,3);
-  setPixel(1,3);
-  setPixel(5,4);
-  setPixel(3,4);
-  setPixel(5,5);
-  setPixel(4,5);
-  setPixel(3,5);
-  setPixel(2,5);
-  setPixel(1,5);
-  setPixel(1,4);
+        case 5: 
+            setPixel(5,3);
+            setPixel(3,3);
+            setPixel(2,3);
+            setPixel(1,3);
+            setPixel(5,4);
+            setPixel(3,4);
+            setPixel(5,5);
+            setPixel(4,5);
+            setPixel(3,5);
+            setPixel(1,5);
+            setPixel(1,4);
             break;
-      case 7: 
-  setPixel(5,3);
-  setPixel(3,3);
-  setPixel(2,3);
-  setPixel(1,3);
-  setPixel(5,4);
-  setPixel(4,3);
-  setPixel(5,5);
+        case 6: 
+            setPixel(5,3);
+            setPixel(3,3);
+            setPixel(2,3);
+            setPixel(1,3);
+            setPixel(5,4);
+            setPixel(3,4);
+            setPixel(5,5);
+            setPixel(4,5);
+            setPixel(3,5);
+            setPixel(2,5);
+            setPixel(1,5);
+            setPixel(1,4);
             break;
-      case 8: 
-  setPixel(5,3);
-  setPixel(3,3);
-  setPixel(2,3);
-  setPixel(1,3);
-  setPixel(5,4);
-  setPixel(4,3);
-  setPixel(5,5);
-  setPixel(4,5);
-  setPixel(3,5);
-  setPixel(2,5);
-  setPixel(1,5);
-  setPixel(1,4);
-  setPixel(3,4);
+        case 7: 
+            setPixel(5,3);
+            setPixel(3,3);
+            setPixel(2,3);
+            setPixel(1,3);
+            setPixel(5,4);
+            setPixel(4,3);
+            setPixel(5,5);
             break;
-      case 9: 
-  setPixel(5,3);
-  setPixel(3,3);
-  setPixel(2,3);
-  setPixel(1,3);
-  setPixel(5,4);
-  setPixel(4,3);
-  setPixel(5,5);
-  setPixel(4,5);
-  setPixel(3,5);
-  setPixel(1,5);
-  setPixel(1,4);
-  setPixel(3,4);
+        case 8: 
+            setPixel(5,3);
+            setPixel(3,3);
+            setPixel(2,3);
+            setPixel(1,3);
+            setPixel(5,4);
+            setPixel(4,3);
+            setPixel(5,5);
+            setPixel(4,5);
+            setPixel(3,5);
+            setPixel(2,5);
+            setPixel(1,5);
+            setPixel(1,4);
+            setPixel(3,4);
             break;
-
-            case 999: 
-  setPixel(1,6);
-  setPixel(1,5);
-  setPixel(2,6);
-  setPixel(2,2);
-
-  setPixel(3,6);
-  setPixel(3,3);
-  setPixel(3,2);
-  setPixel(3,1);
-
-  setPixel(4,6);
-  setPixel(4,4);
-  setPixel(4,3);
-  setPixel(4,2);
-  setPixel(4,1);
-
-  setPixel(5,6);
-  setPixel(5,2);
-  setPixel(4,0);
-
-  setPixel(6,6);
-  setPixel(6,5);
-  setPixel(6,4);
-  setPixel(6,3);
-  setPixel(6,2);
-
+        case 9: 
+            setPixel(5,3);
+            setPixel(3,3);
+            setPixel(2,3);
+            setPixel(1,3);
+            setPixel(5,4);
+            setPixel(4,3);
+            setPixel(5,5);
+            setPixel(4,5);
+            setPixel(3,5);
+            setPixel(1,5);
+            setPixel(1,4);
+            setPixel(3,4);
             break;
-
-  default: 
-  setPixel(5,5);
-  setPixel(4,5);
-  setPixel(3,5);
-  setPixel(2,5);
-  setPixel(1,5);
-
-  setPixel(5,1);
-  setPixel(3,1);
-  setPixel(2,1);
-  setPixel(1,1);
-  setPixel(5,2);
-  setPixel(4,1);
-  setPixel(5,3);
-  setPixel(4,3);
-  setPixel(3,3);
-  setPixel(2,3);
-  setPixel(1,3);
-  setPixel(1,2);
+        case 999: 
+            // restart icon
+            setPixel(1,6);
+            setPixel(1,5);
+            setPixel(2,6);
+            setPixel(2,2);
+            setPixel(3,6);
+            setPixel(3,3);
+            setPixel(3,2);
+            setPixel(3,1);
+            setPixel(4,6);
+            setPixel(4,4);
+            setPixel(4,3);
+            setPixel(4,2);
+            setPixel(4,1);
+            setPixel(5,6);
+            setPixel(5,2);
+            setPixel(4,0);
+            setPixel(6,6);
+            setPixel(6,5);
+            setPixel(6,4);
+            setPixel(6,3);
+            setPixel(6,2);
+            break;
+        default: 
+            // score 10
+            setPixel(5,5);
+            setPixel(4,5);
+            setPixel(3,5);
+            setPixel(2,5);
+            setPixel(1,5);
+            setPixel(5,1);
+            setPixel(3,1);
+            setPixel(2,1);
+            setPixel(1,1);
+            setPixel(5,2);
+            setPixel(4,1);
+            setPixel(5,3);
+            setPixel(4,3);
+            setPixel(3,3);
+            setPixel(2,3);
+            setPixel(1,3);
+            setPixel(1,2);
             break;
     }
 }
@@ -429,28 +394,25 @@ void printScore(int score) {
  */
 void eat()
 {
-  // Check if head is at food position
-  if (body[head].x == food.x && body[head].y == food.y)
-  {
-    // We increase the difficulty each time the snake eats 50 ms
-    if (timeDifficult >= 100)
-    {
-      timeDifficult -= 50;
-    }
+    // Check if head is at food position
+    if (body[head].x == food.x && body[head].y == food.y){
+        // We increase the difficulty each time the snake eats 50 ms
+        if (timeDifficult >= 100){
+            timeDifficult -= 50;
+        }
     
-    // Play randomly a sound
-    tone(0, melodyEat[score], 1000/8);
+        // Play randomly a sound
+        tone(0, melodyEat[score], 1000/8);
 
-    if (bodyLength < MAX_BODY_LENGTH)
-    {
-      bodyLength++;
-      tail--;
-      if (tail < 0) tail = MAX_BODY_LENGTH - 1;
+        if (bodyLength < MAX_BODY_LENGTH){
+            bodyLength++;
+            tail--;
+            if (tail < 0) tail = MAX_BODY_LENGTH - 1;
+        }
+        score++;
+        food = { -1, -1 };
+        spawnFood();
     }
-    score++;
-    food = { -1, -1 };
-    spawnFood();
-  }
 }
 
 
@@ -458,23 +420,22 @@ void eat()
  * Initializing our variables for snake size. The size of the snake: 3. Position of the food on the matrix. Snake speed : 500. Direction of the snake : DOWN
  * This function is called at the beginning of the game and at the end of the game
  */
-void reset()
-{
-  body[0] = { 3,3 };
-  body[1] = { 3,4 };
-  body[2] = { 3,5 };
-  bodyLength = 3;
-  head = 2;
-  tail = 0;
-  direction = DIRECTION_DOWN;
-  food = {6, 7};
-  gameover = 0;
-  elapsedTime = 0;
-  score = 0;
-  spawnFood();
-  readInput = true;
-  musicWinPlayed = false;
-  timeDifficult = 500;
+void reset(){
+    body[0] = { 3,3 };
+    body[1] = { 3,4 };
+    body[2] = { 3,5 };
+    bodyLength = 3;
+    head = 2;
+    tail = 0;
+    direction = DIRECTION_DOWN;
+    food = {6, 7};
+    gameover = 0;
+    elapsedTime = 0;
+    score = 0;
+    spawnFood();
+    readInput = true;
+    musicWinPlayed = false;
+    timeDifficult = 500;
 }
 
 /**
@@ -482,21 +443,20 @@ void reset()
  * This function is called once the finished part
  */
 void musicWin(){
-  musicWinPlayed = true;
-  for (int thisNote = 0; thisNote < 8; thisNote++) {
-    // to calculate the note duration, take one second divided by the note type.
-    int noteDuration = 1000 / noteDurations[thisNote];
-    tone(0, melody[thisNote], noteDuration);
+    musicWinPlayed = true;
+    for (int thisNote = 0; thisNote < 8; thisNote++) {
+        // to calculate the note duration, take one second divided by the note type.
+        int noteDuration = 1000 / noteDurations[thisNote];
+        tone(0, melody[thisNote], noteDuration);
 
-    // to distinguish the notes, set a minimum time between them.
-    // the note's duration + 30% seems to work well:
-    int pauseBetweenNotes = noteDuration * 1.30;
-    delay(pauseBetweenNotes);
+        // to distinguish the notes, set a minimum time between them.
+        // the note's duration + 30% seems to work well:
+        int pauseBetweenNotes = noteDuration * 1.30;
+        delay(pauseBetweenNotes);
 
-    // stop the tone playing
-    noTone(0);
-  } 
-
+        // stop the tone playing
+        noTone(0);
+    } 
 }
 
 /**
@@ -504,27 +464,27 @@ void musicWin(){
  * Initialise the variable with the function reset
  */
 void setup(){   
-  pinMode(PIN_ROW1, OUTPUT);
-  pinMode(PIN_ROW2, OUTPUT);
-  pinMode(PIN_ROW3, OUTPUT);
-  pinMode(PIN_ROW4, OUTPUT);
-  pinMode(PIN_ROW5, OUTPUT);
-  pinMode(PIN_ROW6, OUTPUT);
-  pinMode(PIN_ROW7, OUTPUT);
-  pinMode(PIN_ROW8, OUTPUT);
-  pinMode(PIN_COL1, OUTPUT);
-  pinMode(PIN_COL2, OUTPUT);
-  pinMode(PIN_COL3, OUTPUT);
-  pinMode(PIN_COL4, OUTPUT);
-  pinMode(PIN_COL5, OUTPUT);
-  pinMode(PIN_COL6, OUTPUT);
-  pinMode(PIN_COL7, OUTPUT);
-  pinMode(PIN_COL8, OUTPUT);
+    pinMode(PIN_ROW1, OUTPUT);
+    pinMode(PIN_ROW2, OUTPUT);
+    pinMode(PIN_ROW3, OUTPUT);
+    pinMode(PIN_ROW4, OUTPUT);
+    pinMode(PIN_ROW5, OUTPUT);
+    pinMode(PIN_ROW6, OUTPUT);
+    pinMode(PIN_ROW7, OUTPUT);
+    pinMode(PIN_ROW8, OUTPUT);
+    pinMode(PIN_COL1, OUTPUT);
+    pinMode(PIN_COL2, OUTPUT);
+    pinMode(PIN_COL3, OUTPUT);
+    pinMode(PIN_COL4, OUTPUT);
+    pinMode(PIN_COL5, OUTPUT);
+    pinMode(PIN_COL6, OUTPUT);
+    pinMode(PIN_COL7, OUTPUT);
+    pinMode(PIN_COL8, OUTPUT);
 
-  pinMode(PIN_INPUT_LEFT, INPUT);
-  pinMode(PIN_INPUT_RIGHT, INPUT);
-  
-  reset(); 
+    pinMode(PIN_INPUT_LEFT, INPUT);
+    pinMode(PIN_INPUT_RIGHT, INPUT);
+
+    reset(); 
 }
 
 /**
@@ -532,46 +492,36 @@ void setup(){
  * 
  */
 void loop(){   
-     unsigned long currentTime = millis(); 
+    unsigned long currentTime = millis(); 
 
-     if(!gameover)
-     {
-         draw();
-         elapsedTime += currentTime - previousTime;
-         if(elapsedTime > timeDifficult)
-         {
-             move();
-             eat();
-             checkGameover();
-             elapsedTime = 0;
-             readInput = true;
-         }
-         if(readInput)
-         {
-           if(digitalRead(PIN_INPUT_RIGHT) && !lastInput) { direction = (direction + 1) % 4; readInput = false; }
-           if(digitalRead(PIN_INPUT_LEFT) && !lastInput) { direction = (4 + direction-1) % 4; readInput = false; }
-         }
-         lastInput = digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT);
-         
-     }
-     else
-     {
-        if (!musicWinPlayed)
-          {
+    if(!gameover){
+        draw();
+        elapsedTime += currentTime - previousTime;
+        if(elapsedTime > timeDifficult){
+            move();
+            eat();
+            checkGameover();
+            elapsedTime = 0;
+            readInput = true;
+        }
+        if(readInput){
+            if(digitalRead(PIN_INPUT_RIGHT) && !lastInput) { direction = (direction + 1) % 4; readInput = false; }
+            if(digitalRead(PIN_INPUT_LEFT) && !lastInput) { direction = (4 + direction-1) % 4; readInput = false; }
+        }
+        lastInput = digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT);
+    }else{
+        if (!musicWinPlayed){
             musicWin();
-          }
-          
-          unsigned long starttime = millis();
-          unsigned long endtime = starttime;
-          while ((endtime - starttime) <=4000)
-          {
+        }
+        unsigned long starttime = millis();
+        unsigned long endtime = starttime;
+        while ((endtime - starttime) <=4000){
             printScore(score);
             endtime = millis();
-          }
-          restart();
-     }
-      
-     previousTime = currentTime;
+        }
+        restart();
+    }
+    previousTime = currentTime;
 }
 
 /**
@@ -581,13 +531,12 @@ void loop(){
 void restart(){
 
 bool restartButton = true;
-          while (restartButton)
-          {
-            printScore(999);
-            if(digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT)){
-                restartButton = false;
-            }
-          }
-          reset();
+    while (restartButton){
+        printScore(999);
+        if(digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT)){
+            restartButton = false;
+        }
+    }
+    reset();
 }
 
