@@ -10,10 +10,10 @@ You will need the following items to implement this project:
 
 ## Rules
 
-- Don't run the snake into his own tail: you die.
+- Don't run the snake into his own tail if you want to stay alive.
 - Use the 2 push buttons to turn right or left.
-- Push button "red" may also be used for "Play" and "Pause"
-- Eat the red dots to gain points.
+- Button "red" may also be used for "Play" and "Pause"
+- Eat the dots to gain points.
 - More point you get, faster the snake is
 
 ## Circuit Diagram
