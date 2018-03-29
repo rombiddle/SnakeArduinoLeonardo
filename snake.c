@@ -33,6 +33,7 @@
 
 #define PIN_INPUT_LEFT A4 /* This constant is called for the left button yellow */
 #define PIN_INPUT_RIGHT A5 /* This constant is called for the right black button */
+#define PIN_INPUT_PLAY_PAUSE 1 /* This constant is called for the play/pause red button */
 
 #define MAX_BODY_LENGTH 13 /* This constant is called to give a max size to the snake */
 #define GAME_AREA_WIDTH 8 /* This constant is called to give the width of our game area. */
@@ -64,7 +65,7 @@ bool readInput;
 unsigned long previousTime;
 bool musicWinPlayed;
 int timeDifficult;
-
+bool isPaused;
 int melody[] = { NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4 };
 int melodyEat[] = { NOTE_C4, NOTE_G3, NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3 };
 int noteDurations[] = { 4, 8, 8, 4, 4, 4, 4, 4 };
@@ -397,8 +398,8 @@ void eat()
     // Check if head is at food position
     if (body[head].x == food.x && body[head].y == food.y){
         // We increase the difficulty each time the snake eats 50 ms
-        if (timeDifficult >= 100){
-            timeDifficult -= 50;
+        if (timeDifficult > 100){
+            timeDifficult -= 75;
         }
     
         // Play randomly a sound
@@ -424,6 +425,7 @@ void reset(){
     body[0] = { 3,3 };
     body[1] = { 3,4 };
     body[2] = { 3,5 };
+    isPaused = false;
     bodyLength = 3;
     head = 2;
     tail = 0;
@@ -483,6 +485,7 @@ void setup(){
 
     pinMode(PIN_INPUT_LEFT, INPUT);
     pinMode(PIN_INPUT_RIGHT, INPUT);
+    pinMode(PIN_INPUT_PLAY_PAUSE, INPUT);
 
     reset(); 
 }
@@ -497,18 +500,33 @@ void loop(){
     if(!gameover){
         draw();
         elapsedTime += currentTime - previousTime;
-        if(elapsedTime > timeDifficult){
-            move();
-            eat();
-            checkGameover();
-            elapsedTime = 0;
-            readInput = true;
+        if(digitalRead(PIN_INPUT_PLAY_PAUSE)) {
+            isPaused = !isPaused
+            Serial.print("isPaused");
+            Serial.println(isPaused);
         }
-        if(readInput){
-            if(digitalRead(PIN_INPUT_RIGHT) && !lastInput) { direction = (direction + 1) % 4; readInput = false; }
-            if(digitalRead(PIN_INPUT_LEFT) && !lastInput) { direction = (4 + direction-1) % 4; readInput = false; }
+        if (!isPaused)
+        {
+            if(elapsedTime > timeDifficult){
+                move();
+                eat();
+                checkGameover();
+                elapsedTime = 0;
+                readInput = true;
+            }
+            if(readInput){
+                if(digitalRead(PIN_INPUT_RIGHT) && !lastInput) {
+                    direction = (direction + 1) % 4;
+                    readInput = false; 
+                }
+                if(digitalRead(PIN_INPUT_LEFT) && !lastInput) { 
+                    direction = (4 + direction-1) % 4; 
+                    readInput = false; 
+                }
+            }
+            lastInput = digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT);
         }
-        lastInput = digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT);
+        
     }else{
         if (!musicWinPlayed){
             musicWin();
@@ -529,8 +547,7 @@ void loop(){
  * Displays an arrow. Press one of the buttons to start a new game
  */
 void restart(){
-
-bool restartButton = true;
+    bool restartButton = true;
     while (restartButton){
         printScore(999);
         if(digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT)){
