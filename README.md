@@ -1,5 +1,5 @@
 # Snake
-Snake for Arduino Leonardo
+Snake game for Arduino Leonardo
 
 ## Requirements:
 You will need the following items to implement this project:
@@ -7,7 +7,7 @@ You will need the following items to implement this project:
 - 8x8 LED Matrix (dg-d03883 no)
 - 2 Push Buttons
 - 1 Buzzer
-- 8 resistors of 220Ω and 2 resistors of 10kΩ
+- 8 resistors of 220Ω for the matrix and 2 resistors of 10kΩ for the push buttons
 
 ## Rules
 
@@ -50,6 +50,14 @@ The buzzer is plugged in at PIN 0.
 ## Library
 
 Tone
+
+## Extra feature (Play/Pause button)
+
+We tried to add a push button to Play/Pause the game on PIN 1.
+
+Our first problem was that the push button controlling directions are Analog! In this case, the digitalRead return 1 on click. The push button controlling Play/Pause is Digital (cf Arduino PIN 1) and the digitalRead return 0 on click.
+
+Our second problem was that the game pauses by itself whenever the snake eat. We could not fix this problem and went back to the game version without this feature.
 
 # License
 
