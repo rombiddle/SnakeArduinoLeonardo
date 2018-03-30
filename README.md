@@ -39,11 +39,11 @@ The 2 push buttons are plugged in PIN A4 and PIN A5.
 
 ## Circuit Diagram
 
-![Serpentuino](https://github.com/raulbojalil/serpentuino/blob/master/snake.png?raw=true "serpentuino")
+![Snake](https://github.com/rombiddle/SnakeArduinoLeonardo/blob/master/29830725_10208761236147876_843359766_o.png?raw=true "Snake")
 
 ## Video
 
-[![Serpentuino](https://github.com/raulbojalil/serpentuino/blob/master/video.png)](https://www.youtube.com/watch?v=j3Xj868APJs "Serpentuino")
+[![Serpentuino]()](https://www.youtube.com/watch?v=Qi7nh-p-SI8 "Serpentuino")
 
 ## Library
 
