@@ -7,6 +7,7 @@ You will need the following items to implement this project:
 - 8x8 LED Matrix (dg-d03883 no)
 - 2 Push Buttons
 - 1 Buzzer
+- 8 resistors of 220Ω and 2 resistors of 
 
 ## Rules
 
@@ -28,7 +29,13 @@ You will need the following items to implement this project:
 |    |    |    |    |    |    |    |    | **2** |
 | **13** | **12** | **11** | **10** | **9**  | **8**  | **7**  | **6**  | **PIN** |
 
-In order to turn on the led with the "X", you have to set up to HIGH the PIN 3 et set up to LOW the PIN 6
+In order to turn on the led with the "X", you have to set up PIN 3 to HIGH and set up PIN 6 to LOW.
+
+## Push Buttons
+
+The 2 push buttons are plugged in PIN A4 and PIN A5.
+
+
 
 ## Circuit Diagram
 
