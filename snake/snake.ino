@@ -33,7 +33,6 @@
 
 #define PIN_INPUT_LEFT A4 /* This constant is called for the left button yellow */
 #define PIN_INPUT_RIGHT A5 /* This constant is called for the right black button */
-#define PIN_INPUT_PLAY_PAUSE 1 /* This constant is called for the play/pause red button */
 
 #define MAX_BODY_LENGTH 13 /* This constant is called to give a max size to the snake */
 #define GAME_AREA_WIDTH 8 /* This constant is called to give the width of our game area. */
@@ -130,6 +129,7 @@ bool foodPositionIsValid()
 {
     if (food.x < 0 || food.y < 0) return false;
 
+
     for (int i = tail; i <= (head > tail ? head : MAX_BODY_LENGTH - 1); i++)
     {
         if (body[i].x == food.x && body[i].y == food.y) return false;
@@ -188,10 +188,8 @@ void spawnFood()
             random(GAME_AREA_WIDTH), 
             random(GAME_AREA_HEIGHT) 
         };
-
         Serial.print("food spawn");
     }
-    Serial.print("food spawn invalid");
 }
 
 
@@ -224,16 +222,70 @@ void draw()
  */
 void move()
 {
-    tail = tail + 1 == MAX_BODY_LENGTH ? 0 : tail + 1;
+    if (tail + 1 == MAX_BODY_LENGTH )
+    {
+        tail  = 0; 
+    } 
+    else
+    {
+        tail += 1;
+    }
+
     Position prevHead = body[head];
-    head = head + 1 == MAX_BODY_LENGTH ? 0 : head + 1;
-    body[head] = 
-    { 
-        prevHead.x + (direction == DIRECTION_LEFT ? -1 : (direction == DIRECTION_RIGHT ? 1 : 0)), 
-        prevHead.y + (direction == DIRECTION_UP ? -1 : (direction == DIRECTION_DOWN ? 1 : 0)) 
+
+    if (head + 1 == MAX_BODY_LENGTH)
+    {
+        head = 0;
+    }
+    else
+    {
+        head +=1 ;
+    }
+
+    body[head] = { 
+        getBodyHeadPosition(prevHead.x, DIRECTION_LEFT, DIRECTION_RIGHT),
+        getBodyHeadPosition(prevHead.y, DIRECTION_UP, DIRECTION_DOWN) 
     };
-    body[head].x = body[head].x < 0 ? GAME_AREA_WIDTH - 1 : (body[head].x >= GAME_AREA_WIDTH ? 0 : body[head].x);
-    body[head].y = body[head].y < 0 ? GAME_AREA_HEIGHT - 1 : (body[head].y >= GAME_AREA_HEIGHT ? 0 : body[head].y);
+
+    // we make sur the snake does not get out of the matrix, if so we fix the body head position
+    body[head].x = getCheckBodyHeadPosition(body[head].x, GAME_AREA_WIDTH);
+    body[head].y = getCheckBodyHeadPosition(body[head].y, GAME_AREA_HEIGHT);
+}
+
+int getCheckBodyHeadPosition(int position, int gameArea){
+    if (position < 0)
+    {
+        return gameArea - 1;
+    }
+    else
+    {
+        if (position >= gameArea)
+        {
+            return 0;
+        }
+        else
+        {
+            return position;
+        }
+    }
+}
+
+int getBodyHeadPosition(int prevPosition, int direction1, int direction2){
+    if (direction == direction1)
+    {
+        return prevPosition - 1;
+    }
+    else
+    {
+        if (direction == direction2)
+        {
+            return prevPosition + 1;
+        }
+        else
+        {
+            return prevPosition;
+        }
+    }
 }
 
 /**
@@ -477,7 +529,7 @@ void reset()
     head = 2;
     tail = 0;
     direction = DIRECTION_DOWN;
-    food = {6, 7};
+    food = {random(GAME_AREA_WIDTH), random(GAME_AREA_HEIGHT)};
     gameover = 0;
     elapsedTime = 0;
     score = 0;
@@ -534,7 +586,6 @@ void setup()
 
     pinMode(PIN_INPUT_LEFT, INPUT);
     pinMode(PIN_INPUT_RIGHT, INPUT);
-    pinMode(PIN_INPUT_PLAY_PAUSE, INPUT_PULLUP);
 
     reset(); 
 }
@@ -606,7 +657,7 @@ void restart()
     while (restartButton)
     {
         printScore(999);
-        if(digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT) || digitalRead(PIN_INPUT_PLAY_PAUSE))
+        if(digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT))
         {
             restartButton = false;
         }
