@@ -33,9 +33,11 @@ In order to turn on the led with the "X", you have to set up PIN 3 to HIGH and s
 
 ## Push Buttons
 
-The 2 push buttons are plugged in PIN A4 and PIN A5.
+The 2 push buttons are plugged in at PIN A4 and at PIN A5.
 
+## Buzzer
 
+The buzzer is plugged in at PIN 0.
 
 ## Circuit Diagram
 
