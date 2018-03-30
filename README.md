@@ -41,11 +41,11 @@ The buzzer is plugged in on PIN 0.
 
 ## Circuit Diagram
 
-![Snake](https://github.com/rombiddle/SnakeArduinoLeonardo/blob/master/29830725_10208761236147876_843359766_o.png?raw=true "Snake")
+![Snake](https://github.com/rombiddle/SnakeArduinoLeonardo/blob/master/images/29830725_10208761236147876_843359766_o.png?raw=true "Snake")
 
 ## Video
 
-[![Snake](https://github.com/rombiddle/SnakeArduinoLeonardo/blob/master/29883488_10208761250068224_692720117_o.png?raw=true)](https://www.youtube.com/watch?v=Qi7nh-p-SI8 "Snake")
+[![Snake](https://github.com/rombiddle/SnakeArduinoLeonardo/blob/master/images/29883488_10208761250068224_692720117_o.png?raw=true)](https://www.youtube.com/watch?v=Qi7nh-p-SI8 "Snake")
 
 ## Library
 
