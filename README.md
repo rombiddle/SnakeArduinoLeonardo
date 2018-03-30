@@ -7,7 +7,7 @@ You will need the following items to implement this project:
 - 8x8 LED Matrix (dg-d03883 no)
 - 2 Push Buttons
 - 1 Buzzer
-- 8 resistors of 220Ω and 2 resistors of 
+- 8 resistors of 220Ω and 2 resistors of 10kΩ
 
 ## Rules
 
