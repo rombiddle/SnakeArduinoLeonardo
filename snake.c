@@ -216,7 +216,7 @@ void move(){
 }
 
 /**
- * Displays the score on the data matrix. The numbers range from 0 to 10. By default we display 11 to the user
+ * Displays the score on the data matrix. The numbers range from 0 to 10. By default we display 12 to the user
  * 
  * @param score  Result of the number of eating food
  */
@@ -345,6 +345,39 @@ void printScore(int score) {
             setPixel(1,4);
             setPixel(3,4);
             break;
+        case 10: 
+            setPixel(5,5);
+            setPixel(4,5);
+            setPixel(3,5);
+            setPixel(2,5);
+            setPixel(1,5);
+            setPixel(5,1);
+            setPixel(3,1);
+            setPixel(2,1);
+            setPixel(1,1);
+            setPixel(5,2);
+            setPixel(4,1);
+            setPixel(5,3);
+            setPixel(4,3);
+            setPixel(3,3);
+            setPixel(2,3);
+            setPixel(1,3);
+            setPixel(1,2);
+            break;
+        case 11: 
+            setPixel(5,3);
+            setPixel(3,3);
+            setPixel(2,3);
+            setPixel(1,3);
+            setPixel(5,4);
+            setPixel(4,3);
+            setPixel(5,5);
+            setPixel(4,5);
+            setPixel(3,5);
+            setPixel(1,5);
+            setPixel(1,4);
+            setPixel(3,4);
+            break;
         case 999: 
             // restart icon
             setPixel(1,6);
@@ -413,8 +446,9 @@ void eat()
             if (tail < 0) tail = MAX_BODY_LENGTH - 1;
         }
         score++;
-        food = { -1, -1 };
-        spawnFood();
+        // food = { -1, -1 };
+        food = { random(GAME_AREA_WIDTH), random(GAME_AREA_HEIGHT) };
+        //spawnFood();
     }
 }
 
@@ -436,10 +470,10 @@ void reset(){
     gameover = 0;
     elapsedTime = 0;
     score = 0;
-    spawnFood();
+    //spawnFood();
     readInput = true;
     musicWinPlayed = false;
-    timeDifficult = 500;
+    timeDifficult = 700;
 }
 
 /**
@@ -493,7 +527,8 @@ void setup(){
 
 /**
  * This function is used when a block of code needs to be executed several number of times.
- * 
+ * digitalRead of button pause (digital) return 0 on click
+ * digitalRead of button right/left (analog) return 1 on click
  */
 void loop(){   
     unsigned long currentTime = millis(); 
@@ -501,9 +536,31 @@ void loop(){
     if(!gameover){
         draw();
         elapsedTime += currentTime - previousTime;
-        if(!digitalRead(PIN_INPUT_PLAY_PAUSE) && pauseInput) {
+        Serial.print("digit read : ");
+        Serial.print(!digitalRead(PIN_INPUT_PLAY_PAUSE));
+        Serial.print(" ");
+        Serial.println(pauseInput);
+        Serial.print("isPaused1 = ");
+        Serial.println(isPaused); 
+        int reading = !digitalRead(PIN_INPUT_PLAY_PAUSE);
+        if(reading && pauseInput) {
+            Serial.print("start pause/play button ");
+            Serial.print(reading);
+            Serial.print(" ");
+            Serial.println(pauseInput);
+            if (isPaused)
+            {
+                Serial.println("play");
+            }else{
+                Serial.print("pause");
+                delay(9999999999);
+            }
             isPaused = !isPaused;
+            Serial.println("end pause/play button");
         }
+        Serial.print("isPaused1 = ");
+        Serial.println(isPaused);
+        // avoid to play/pause when the pause button to stay pressed 
         pauseInput = digitalRead(PIN_INPUT_PLAY_PAUSE);
         if (!isPaused){
             if(elapsedTime > timeDifficult){
@@ -514,15 +571,18 @@ void loop(){
                 readInput = true;
             }
             if(readInput){
-                if(digitalRead(PIN_INPUT_RIGHT) && !lastInput) {
+                if(digitalRead(PIN_INPUT_LEFT) && !lastInput) {
+                    Serial.println("left");
                     direction = (direction + 1) % 4;
                     readInput = false; 
                 }
-                if(digitalRead(PIN_INPUT_LEFT) && !lastInput) { 
+                if(digitalRead(PIN_INPUT_RIGHT) && !lastInput) { 
+                    Serial.println("right");
                     direction = (4 + direction-1) % 4; 
                     readInput = false; 
                 }
             }
+            // avoid to turn when the button right/left to stay pressed 
             lastInput = digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT);
         }
         
