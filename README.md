@@ -4,7 +4,7 @@ Snake for Arduino Leonardo
 ## Requirements:
 You will need the following items to implement this project:
 - Arduino Leonardo
-- 8x8 (or any other size) LED Matrix
+- 8x8 LED Matrix (dg-d03883 no)
 - 2 Push Buttons
 - 1 Buzzer
 
@@ -15,7 +15,7 @@ You will need the following items to implement this project:
 - Eat the dots to gain points.
 - More point you get, faster the snake is
 
-## Tech
+## 8x8 LED Matrix (dg-d03883 no)
 
 |    |    |    |    |    |    |    |    | **A0** |
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
@@ -24,9 +24,11 @@ You will need the following items to implement this project:
 |    |    |    |    |    |    |    |    | **A3** |
 |    |    |    |    |    |    |    |    | **5** |
 |    |    |    |    |    |    |    |    | **4** |
-|    |    |    |    |    |    |    |    | **3** |
+|    |    |    |    |    |    |    |  X  | **3** |
 |    |    |    |    |    |    |    |    | **2** |
 | **13** | **12** | **11** | **10** | **9**  | **8**  | **7**  | **6**  | **PIN** |
+
+In order to turn on the led with the "X", you have to set up to HIGH the PIN 3 et set up to LOW the PIN 6
 
 ## Circuit Diagram
 
