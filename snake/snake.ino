@@ -53,7 +53,6 @@ typedef struct p
 
 Position body[MAX_BODY_LENGTH];
 int lastInput;
-int pauseInput;
 int head;
 int tail;
 int bodyLength;
@@ -66,7 +65,6 @@ bool readInput;
 unsigned long previousTime;
 bool musicWinPlayed;
 int timeDifficult;
-bool isPaused;
 int melody[] = { NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4 };
 int melodyEat[] = { NOTE_C4, NOTE_G3, NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3,NOTE_C4, NOTE_G3 };
 int noteDurations[] = { 4, 8, 8, 4, 4, 4, 4, 4 };
@@ -475,7 +473,6 @@ void reset()
     body[0] = { 3,3 };
     body[1] = { 3,4 };
     body[2] = { 3,5 };
-    isPaused = false;
     bodyLength = 3;
     head = 2;
     tail = 0;
@@ -555,66 +552,31 @@ void loop()
     {
         draw();
         elapsedTime += currentTime - previousTime;
-        Serial.print("digit read : ");
-        Serial.print(!digitalRead(PIN_INPUT_PLAY_PAUSE));
-        Serial.print(" ");
-        Serial.println(pauseInput);
-        Serial.print("isPaused1 = ");
-        Serial.println(isPaused); 
-        int reading = !digitalRead(PIN_INPUT_PLAY_PAUSE);
-
-        if(reading && pauseInput) 
+        if(elapsedTime > timeDifficult)
         {
-            Serial.print("start pause/play button ");
-            Serial.print(reading);
-            Serial.print(" ");
-            Serial.println(pauseInput);
-            if (isPaused)
-            {
-                Serial.println("play");
-            }
-            else
-            {
-                Serial.print("pause");
-                delay(9999999999);
-            }
-            isPaused = !isPaused;
-            Serial.println("end pause/play button");
+            move();
+            eat();
+            checkGameover();
+            elapsedTime = 0;
+            readInput = true;
         }
-        Serial.print("isPaused1 = ");
-        Serial.println(isPaused);
-        // avoid to play/pause when the pause button to stay pressed 
-        pauseInput = digitalRead(PIN_INPUT_PLAY_PAUSE);
-
-        if (!isPaused)
+        if(readInput)
         {
-            if(elapsedTime > timeDifficult)
+            if(digitalRead(PIN_INPUT_LEFT) && !lastInput)
             {
-                move();
-                eat();
-                checkGameover();
-                elapsedTime = 0;
-                readInput = true;
+                Serial.println("left");
+                direction = (direction + 1) % 4;
+                readInput = false; 
             }
-            if(readInput)
-            {
-                if(digitalRead(PIN_INPUT_LEFT) && !lastInput)
-                {
-                    Serial.println("left");
-                    direction = (direction + 1) % 4;
-                    readInput = false; 
-                }
-                if(digitalRead(PIN_INPUT_RIGHT) && !lastInput)
-                { 
-                    Serial.println("right");
-                    direction = (4 + direction-1) % 4; 
-                    readInput = false; 
-                }
+            if(digitalRead(PIN_INPUT_RIGHT) && !lastInput)
+            { 
+                Serial.println("right");
+                direction = (4 + direction-1) % 4; 
+                readInput = false; 
             }
-            // avoid to turn when the button right/left to stay pressed 
-            lastInput = digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT);
         }
-        
+        // avoid to turn when the button right/left to stay pressed 
+        lastInput = digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT);
     }
     else
     {
