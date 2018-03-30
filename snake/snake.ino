@@ -78,7 +78,8 @@ int eatingTone = NOTE_C4;
  * @param row Position to be lit on the row 
  * @param column Position to be lit on the column
  */
-void setPixel(int row, int column){
+void setPixel(int row, int column)
+{
     digitalWrite(PIN_ROW1, LOW);
     digitalWrite(PIN_ROW2, LOW);
     digitalWrite(PIN_ROW3, LOW);
@@ -96,7 +97,8 @@ void setPixel(int row, int column){
     digitalWrite(PIN_COL7, HIGH);
     digitalWrite(PIN_COL8, HIGH);
         
-    switch(column){
+    switch(column)
+    {
         case 0: digitalWrite(PIN_COL1, LOW); break;
         case 1: digitalWrite(PIN_COL2, LOW); break;
         case 2: digitalWrite(PIN_COL3, LOW); break;
@@ -108,7 +110,8 @@ void setPixel(int row, int column){
         default: break;
     }
 
-    switch(row){
+    switch(row)
+    {
         case 0: digitalWrite(PIN_ROW1, HIGH); break;
         case 1: digitalWrite(PIN_ROW2, HIGH); break;
         case 2: digitalWrite(PIN_ROW3, HIGH); break;
@@ -129,12 +132,15 @@ bool foodPositionIsValid()
 {
     if (food.x < 0 || food.y < 0) return false;
 
-    for (int i = tail; i <= (head > tail ? head : MAX_BODY_LENGTH - 1); i++){
+    for (int i = tail; i <= (head > tail ? head : MAX_BODY_LENGTH - 1); i++)
+    {
         if (body[i].x == food.x && body[i].y == food.y) return false;
     }
 
-    if (head < tail){
-        for (int i = 0; i <= head; i++){
+    if (head < tail)
+    {
+        for (int i = 0; i <= head; i++)
+        {
             if (body[i].x == food.x && body[i].y == food.y) return false;
         }
     }
@@ -146,17 +152,23 @@ bool foodPositionIsValid()
  * Check if the game is lost. This function is called several times on the loop.
  * 
  */
-void checkGameover(){
-    for (int i = tail; i <= (head > tail ? head - 1 : MAX_BODY_LENGTH - 1); i++){
-        if (body[head].x == body[i].x && body[head].y == body[i].y){
+void checkGameover()
+{
+    for (int i = tail; i <= (head > tail ? head - 1 : MAX_BODY_LENGTH - 1); i++)
+    {
+        if (body[head].x == body[i].x && body[head].y == body[i].y)
+        {
             gameover = GAME_OVER_TIME;
             return;
         }
     }
 
-    if (head < tail){
-        for (int i = 0; i < head; i++){
-            if (body[head].x == body[i].x && body[head].y == body[i].y){
+    if (head < tail)
+    {
+        for (int i = 0; i < head; i++)
+        {
+            if (body[head].x == body[i].x && body[head].y == body[i].y)
+            {
                 gameover = GAME_OVER_TIME;
                 return;
             }
@@ -171,8 +183,14 @@ void checkGameover(){
  */
 void spawnFood()
 {
-    while (!foodPositionIsValid()){
-        food = { random(GAME_AREA_WIDTH), random(GAME_AREA_HEIGHT) };
+    while (!foodPositionIsValid())
+    {
+        food = 
+        {
+            random(GAME_AREA_WIDTH), 
+            random(GAME_AREA_HEIGHT) 
+        };
+
         Serial.print("food spawn");
     }
     Serial.print("food spawn invalid");
@@ -185,12 +203,15 @@ void spawnFood()
  */
 void draw()
 {
-    for (int i = tail; i <= (head > tail ? head : MAX_BODY_LENGTH - 1); i++){
+    for (int i = tail; i <= (head > tail ? head : MAX_BODY_LENGTH - 1); i++)
+    {
         setPixel(body[i].x, body[i].y);
     }
 
-    if (head < tail){
-        for (int i = 0; i <= head; i++){
+    if (head < tail)
+    {
+        for (int i = 0; i <= head; i++)
+        {
             setPixel(body[i].x, body[i].y);
         }
     }
@@ -203,11 +224,13 @@ void draw()
  * We have 4 direction : DIRECTION_LEFT, DIRECTION_RIGHT, DIRECTION_UP, DIRECTION_DOWN
  * 
  */
-void move(){
+void move()
+{
     tail = tail + 1 == MAX_BODY_LENGTH ? 0 : tail + 1;
     Position prevHead = body[head];
     head = head + 1 == MAX_BODY_LENGTH ? 0 : head + 1;
-    body[head] = { 
+    body[head] = 
+    { 
         prevHead.x + (direction == DIRECTION_LEFT ? -1 : (direction == DIRECTION_RIGHT ? 1 : 0)), 
         prevHead.y + (direction == DIRECTION_UP ? -1 : (direction == DIRECTION_DOWN ? 1 : 0)) 
     };
@@ -220,8 +243,10 @@ void move(){
  * 
  * @param score  Result of the number of eating food
  */
-void printScore(int score) {
-    switch(score){
+void printScore(int score)
+{
+    switch(score)
+    {
         case 0:
             setPixel(5,3);
             setPixel(3,3);
@@ -364,20 +389,6 @@ void printScore(int score) {
             setPixel(1,3);
             setPixel(1,2);
             break;
-        case 11: 
-            setPixel(5,3);
-            setPixel(3,3);
-            setPixel(2,3);
-            setPixel(1,3);
-            setPixel(5,4);
-            setPixel(4,3);
-            setPixel(5,5);
-            setPixel(4,5);
-            setPixel(3,5);
-            setPixel(1,5);
-            setPixel(1,4);
-            setPixel(3,4);
-            break;
         case 999: 
             // restart icon
             setPixel(1,6);
@@ -432,23 +443,25 @@ void printScore(int score) {
 void eat()
 {
     // Check if head is at food position
-    if (body[head].x == food.x && body[head].y == food.y){
+    if (body[head].x == food.x && body[head].y == food.y)
+    {
         // We increase the difficulty each time the snake eats 50 ms
-        if (timeDifficult > 100){
+        if (timeDifficult > 100)
+        {
             timeDifficult -= 75;
         }
         // Play randomly a sound
         tone(0, melodyEat[score], 1000/8);
 
-        if (bodyLength < MAX_BODY_LENGTH){
+        if (bodyLength < MAX_BODY_LENGTH)
+        {
             bodyLength++;
             tail--;
             if (tail < 0) tail = MAX_BODY_LENGTH - 1;
         }
         score++;
-        // food = { -1, -1 };
-        food = { random(GAME_AREA_WIDTH), random(GAME_AREA_HEIGHT) };
-        //spawnFood();
+        food = { -1, -1 };
+        spawnFood();
     }
 }
 
@@ -457,7 +470,8 @@ void eat()
  * Initializing our variables for snake size. The size of the snake: 3. Position of the food on the matrix. Snake speed : 500. Direction of the snake : DOWN
  * This function is called at the beginning of the game and at the end of the game
  */
-void reset(){
+void reset()
+{
     body[0] = { 3,3 };
     body[1] = { 3,4 };
     body[2] = { 3,5 };
@@ -470,7 +484,7 @@ void reset(){
     gameover = 0;
     elapsedTime = 0;
     score = 0;
-    //spawnFood();
+    spawnFood();
     readInput = true;
     musicWinPlayed = false;
     timeDifficult = 700;
@@ -480,9 +494,11 @@ void reset(){
  * Play a Melody using the tone() function and stop a Melody using noTone() function
  * This function is called once the finished part
  */
-void musicWin(){
+void musicWin()
+{
     musicWinPlayed = true;
-    for (int thisNote = 0; thisNote < 8; thisNote++) {
+    for (int thisNote = 0; thisNote < 8; thisNote++)
+    {
         // to calculate the note duration, take one second divided by the note type.
         int noteDuration = 1000 / noteDurations[thisNote];
         tone(0, melody[thisNote], noteDuration);
@@ -500,7 +516,8 @@ void musicWin(){
  * Define the pinMode : Matrix and buttons.
  * Initialise the variable with the function reset
  */
-void setup(){   
+void setup()
+{   
     pinMode(PIN_ROW1, OUTPUT);
     pinMode(PIN_ROW2, OUTPUT);
     pinMode(PIN_ROW3, OUTPUT);
@@ -530,10 +547,12 @@ void setup(){
  * digitalRead of button pause (digital) return 0 on click
  * digitalRead of button right/left (analog) return 1 on click
  */
-void loop(){   
+void loop()
+{   
     unsigned long currentTime = millis(); 
 
-    if(!gameover){
+    if(!gameover)
+    {
         draw();
         elapsedTime += currentTime - previousTime;
         Serial.print("digit read : ");
@@ -543,7 +562,9 @@ void loop(){
         Serial.print("isPaused1 = ");
         Serial.println(isPaused); 
         int reading = !digitalRead(PIN_INPUT_PLAY_PAUSE);
-        if(reading && pauseInput) {
+
+        if(reading && pauseInput) 
+        {
             Serial.print("start pause/play button ");
             Serial.print(reading);
             Serial.print(" ");
@@ -551,7 +572,9 @@ void loop(){
             if (isPaused)
             {
                 Serial.println("play");
-            }else{
+            }
+            else
+            {
                 Serial.print("pause");
                 delay(9999999999);
             }
@@ -562,21 +585,27 @@ void loop(){
         Serial.println(isPaused);
         // avoid to play/pause when the pause button to stay pressed 
         pauseInput = digitalRead(PIN_INPUT_PLAY_PAUSE);
-        if (!isPaused){
-            if(elapsedTime > timeDifficult){
+
+        if (!isPaused)
+        {
+            if(elapsedTime > timeDifficult)
+            {
                 move();
                 eat();
                 checkGameover();
                 elapsedTime = 0;
                 readInput = true;
             }
-            if(readInput){
-                if(digitalRead(PIN_INPUT_LEFT) && !lastInput) {
+            if(readInput)
+            {
+                if(digitalRead(PIN_INPUT_LEFT) && !lastInput)
+                {
                     Serial.println("left");
                     direction = (direction + 1) % 4;
                     readInput = false; 
                 }
-                if(digitalRead(PIN_INPUT_RIGHT) && !lastInput) { 
+                if(digitalRead(PIN_INPUT_RIGHT) && !lastInput)
+                { 
                     Serial.println("right");
                     direction = (4 + direction-1) % 4; 
                     readInput = false; 
@@ -586,13 +615,17 @@ void loop(){
             lastInput = digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT);
         }
         
-    }else{
-        if (!musicWinPlayed){
+    }
+    else
+    {
+        if (!musicWinPlayed)
+        {
             musicWin();
         }
         unsigned long starttime = millis();
         unsigned long endtime = starttime;
-        while ((endtime - starttime) <=4000){
+        while ((endtime - starttime) <=4000)
+        {
             printScore(score);
             endtime = millis();
         }
@@ -605,14 +638,16 @@ void loop(){
  * This function is used to restart the game once it is finished.
  * Displays an arrow. Press one of the buttons to start a new game
  */
-void restart(){
+void restart()
+{
     bool restartButton = true;
-    while (restartButton){
+    while (restartButton)
+    {
         printScore(999);
-        if(digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT) || digitalRead(PIN_INPUT_PLAY_PAUSE)){
+        if(digitalRead(PIN_INPUT_RIGHT) || digitalRead(PIN_INPUT_LEFT) || digitalRead(PIN_INPUT_PLAY_PAUSE))
+        {
             restartButton = false;
         }
     }
     reset();
 }
-
